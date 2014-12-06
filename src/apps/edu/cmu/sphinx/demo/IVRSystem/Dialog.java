@@ -14,6 +14,9 @@ public class Dialog {
 	
 	public Dialog(ArrayList<Field> fields) {
 		this.fields = fields;
+		ctx = Context.enter();
+		ctx.setLanguageVersion(Context.VERSION_1_2);
+		scope = ctx.initStandardObjects();
 	}
 
 	private boolean evaluateIfCond(String cond) throws JavaScriptException {
@@ -125,10 +128,6 @@ public class Dialog {
 	}
 	
 	public String begin() {
-		ctx = Context.enter();
-		ctx.setLanguageVersion(Context.VERSION_1_2);
-		scope = ctx.initStandardObjects();
-		
 		curFieldIndex = 0;
 
 		return skipTillInput();

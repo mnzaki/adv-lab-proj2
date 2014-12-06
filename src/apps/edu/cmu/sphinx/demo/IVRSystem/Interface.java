@@ -39,17 +39,18 @@ public class Interface {
            
         String vxmlFile;
         vxmlFile = sc.nextLine();
-                
+        vxmlFile = "dialog.vxml";
+       
         Parser parser = new Parser(vxmlFile);
         ArrayList<Field> fields = null; 
         fields = parser.parse();
         
         VoiceManager vm = VoiceManager.getInstance();
-        Voice voice = vm.getVoices()[0];
+        Voice voice = vm.getVoices()[2];
         voice.allocate();
         
         ConfigurationManager cm;
-        cm = new ConfigurationManager(Interface.class.getResource("interface.config.xml"));
+        cm = new ConfigurationManager(Interface.class.getResource("ivrsystem.config.xml"));
 
         Recognizer recognizer = (Recognizer) cm.lookup("recognizer");
         Microphone microphone = (Microphone) cm.lookup("microphone");
@@ -62,7 +63,7 @@ public class Interface {
         
         String toBeSpoken="";
         Dialog dialog = new Dialog(fields);
-        dialog.loadScript(parser.extractScript());
+        //dialog.loadScript(parser.extractScript());
         toBeSpoken = dialog.begin();
         voice.speak(toBeSpoken);
 
@@ -77,5 +78,6 @@ public class Interface {
             voice.speak(toBeSpoken);
         }
         voice.deallocate();
+        recognizer.deallocate();
     }
 }

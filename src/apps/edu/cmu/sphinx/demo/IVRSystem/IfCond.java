@@ -10,4 +10,9 @@ public class IfCond {
 		this.cond = cond;
 		this.clearList = clearList;
 	}
+
+	public IfCond() {
+		this.cond = "";
+		this.clearList = new ArrayList<String>();
+	}
 }

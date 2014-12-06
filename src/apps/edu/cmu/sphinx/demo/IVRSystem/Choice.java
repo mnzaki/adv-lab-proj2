@@ -8,4 +8,9 @@ class Choice {
 		this.name = name;
 		this.tag = tag;
 	}
+
+	public Choice() {
+		this.name = "";
+		this.tag = "";
+	}
 }

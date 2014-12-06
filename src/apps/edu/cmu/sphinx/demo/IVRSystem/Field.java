@@ -30,4 +30,14 @@ public class Field {
 		this.onFilledText = onFilledText;
 		onFilledIsCond = false;
 	}
+
+	public Field() {
+		this.name = "";
+		this.prompt = "";
+		this.cond = "";
+		this.choices = new ArrayList<Choice>();
+		this.onFilledCond = new IfCond();
+		this.onFilledIsCond = false;
+		this.onFilledText = "";
+	}
 }

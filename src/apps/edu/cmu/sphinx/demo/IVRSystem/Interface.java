@@ -47,8 +47,7 @@ public class Interface {
         Voice voice = vm.getVoices()[2];
         voice.allocate();
         
-        ConfigurationManager cm;
-        cm = new ConfigurationManager(Interface.class.getResource("ivrsystem.config.xml"));
+        ConfigurationManager cm = new ConfigurationManager(Interface.class.getResource("IVRSystem.config.xml"));
 
         Recognizer recognizer = (Recognizer) cm.lookup("recognizer");
         recognizer.allocate();
@@ -62,7 +61,7 @@ public class Interface {
         
         String toBeSpoken="";
         Dialog dialog = new Dialog(fields);
-        //dialog.loadScript(parser.extractScript());
+        dialog.loadScript(parser.extractScript());
         toBeSpoken = dialog.begin();
         voice.speak(toBeSpoken);
 
@@ -73,7 +72,10 @@ public class Interface {
             if(toBeSpoken.trim().equals("0")){
                 Result res = recognizer.recognize();
                 toBeSpoken = "";
-                if(res != null) toBeSpoken = res.getBestFinalResultNoFiller();
+                if(res != null) {
+                    toBeSpoken = res.getBestFinalResultNoFiller();
+                    System.out.println("7amada: " + toBeSpoken);
+                }
             }
             toBeSpoken = dialog.interact(toBeSpoken);
             voice.speak(toBeSpoken);

@@ -96,8 +96,8 @@
         <property name="dictionary" value="dictionary"/>
         <property name="grammarLocation"
              value="resource:/edu/cmu/sphinx/demo/IVRSystem/"/>
-        <property name="grammarName" value="calculator"/>
-	<property name="logMath" value="logMath"></property>
+        <property name="grammarName" value="IVRSystem"/>
+	<property name="logMath" value="logMath"/>
     </component>
 
 

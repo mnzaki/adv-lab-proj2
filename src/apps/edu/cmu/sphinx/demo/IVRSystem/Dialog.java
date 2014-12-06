@@ -13,7 +13,10 @@ public class Dialog {
 	private Scriptable scope;
 	
 	public Dialog(ArrayList<Field> fields) {
-		this.fields = fields;
+            this.fields = fields;
+            ctx = Context.enter();
+            ctx.setLanguageVersion(Context.VERSION_1_2);
+            scope = ctx.initStandardObjects();
 	}
 
 	private boolean evaluateIfCond(String cond) throws JavaScriptException {
@@ -38,7 +41,7 @@ public class Dialog {
 					if (i % 2 == 0) {
 						inp += retArr[i];
 					} else {
-						inp += (String) evalJS(retArr[i], "retArr[" + i + "]");
+						inp += "" + evalJS(retArr[i], "retArr[" + i + "]");
 					}
 				}
 			}
@@ -64,7 +67,7 @@ public class Dialog {
 		int i; Choice c = null;
 		for (i = 0; i < field.choices.size(); i++) {
 			c = field.choices.get(i);
-			if (userInput.equals(c.name.toLowerCase())) break;
+			if (userInput.equals(c.name.trim().toLowerCase())) break;
 		}
 		
 		// if the userInput is NOT a valid choice, bail out
@@ -125,9 +128,6 @@ public class Dialog {
 	}
 	
 	public String begin() {
-		ctx = Context.enter();
-		ctx.setLanguageVersion(Context.VERSION_1_2);
-		scope = ctx.initStandardObjects();
 		
 		curFieldIndex = 0;
 

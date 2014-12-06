@@ -13,16 +13,21 @@ public class Dialog {
 	private Scriptable scope;
 	
 	public Dialog(ArrayList<Field> fields) {
-            this.fields = fields;
-            ctx = Context.enter();
-            ctx.setLanguageVersion(Context.VERSION_1_2);
-            scope = ctx.initStandardObjects();
+		this.fields = fields;
+		ctx = Context.enter();
+		ctx.setLanguageVersion(Context.VERSION_1_2);
+		scope = ctx.initStandardObjects();
 	}
 
-	private boolean evaluateIfCond(String cond) throws JavaScriptException {
+	private boolean evalBool(String cond) throws JavaScriptException {
+		cond = "(" + cond + ") ? true : false;";
 		return (Boolean) evalJS(cond, "ifcond");
 	}
 	
+	private boolean isJSUndefined(String src) throws JavaScriptException {
+		String cond = "(typeof(" + src + ")) == 'undefined'";
+		return evalBool(cond);
+	}
 	private Object evalJS(String source, String name) throws JavaScriptException {
 		return ctx.evaluateString(scope, source, name, 1, null);
 
@@ -41,7 +46,7 @@ public class Dialog {
 					if (i % 2 == 0) {
 						inp += retArr[i];
 					} else {
-						inp += "" + evalJS(retArr[i], "retArr[" + i + "]");
+						inp += evalJS(retArr[i], "retArr[" + i + "]");
 					}
 				}
 			}
@@ -51,7 +56,6 @@ public class Dialog {
 		
 		return inp;
 	}
-	
 	// current field prompt has been spoken
 	// current field has choices (waiting for input)
 	// the user-input is for the current field
@@ -85,7 +89,7 @@ public class Dialog {
 			// a name clear list
 			if (field.onFilledIsCond) {
 				// evaluate the field condition
-				boolean condSatisfied = evaluateIfCond(field.onFilledCond.cond);
+				boolean condSatisfied = evalBool(field.onFilledCond.cond);
 				if (condSatisfied) {
 					String src = "";
 					// create the javascript that will clear the variables
@@ -94,7 +98,7 @@ public class Dialog {
 					}
 					// clear the variables
 					evalJS(src, "clearlist");
-				}	
+				}
 			} else {
 				// it's just a string to be said.
 				ret += replaceStringExpr(field.onFilledText);
@@ -103,8 +107,22 @@ public class Dialog {
 			e.printStackTrace();
 		}
 
-		// FIXME don't go to next field if condition is not satisfied
-		curFieldIndex++;
+		// continue on the form at a field that has its variable set
+		// so that if a field clears variables, then processing goes back
+		// to the respective fields
+		int firstUnfilledField = 0;
+		try {
+			for (; firstUnfilledField < fields.size(); firstUnfilledField++) {
+				Field f = fields.get(firstUnfilledField);
+				if (f.name != null && !f.name.equals("") && isJSUndefined(f.name)) {
+					break;
+				}
+			}
+			curFieldIndex = firstUnfilledField;
+		} catch (JavaScriptException e) {
+			e.printStackTrace();
+		}
+
 		return ret;
 	}
 
@@ -128,7 +146,6 @@ public class Dialog {
 	}
 	
 	public String begin() {
-		
 		curFieldIndex = 0;
 
 		return skipTillInput();
@@ -182,6 +199,6 @@ public class Dialog {
 		Dialog d = new Dialog(fields);
 		System.out.println(d.begin());
 		System.out.println(d.interact("big"));
-		System.out.println(d.interact("yes"));
+		System.out.println(d.interact("no"));
 	}
 }

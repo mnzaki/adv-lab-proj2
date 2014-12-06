@@ -9,6 +9,7 @@ import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 import edu.cmu.sphinx.frontend.util.Microphone;
 import edu.cmu.sphinx.recognizer.Recognizer;
+import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -35,11 +36,8 @@ public class Interface {
     
     public static void main(String args[]){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please enter vxml file name to parse:");
            
-        String vxmlFile;
-        vxmlFile = sc.nextLine();
-        vxmlFile = "dialog.vxml";
+        String vxmlFile = "dialog.vxml";
        
         Parser parser = new Parser(vxmlFile);
         ArrayList<Field> fields = null; 
@@ -53,6 +51,7 @@ public class Interface {
         cm = new ConfigurationManager(Interface.class.getResource("ivrsystem.config.xml"));
 
         Recognizer recognizer = (Recognizer) cm.lookup("recognizer");
+        recognizer.allocate();
         Microphone microphone = (Microphone) cm.lookup("microphone");
         if (!microphone.startRecording()) {
             System.out.println("Cannot start microphone.");
@@ -72,7 +71,9 @@ public class Interface {
             System.out.println("Enter 0 to answer using the Mic or type your answer:");
             toBeSpoken = sc.nextLine();
             if(toBeSpoken.trim().equals("0")){
-                toBeSpoken = recognizer.recognize().getBestFinalResultNoFiller();;
+                Result res = recognizer.recognize();
+                toBeSpoken = "";
+                if(res != null) toBeSpoken = res.getBestFinalResultNoFiller();
             }
             toBeSpoken = dialog.interact(toBeSpoken);
             voice.speak(toBeSpoken);

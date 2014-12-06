@@ -53,26 +53,29 @@ public class Parser extends DefaultHandler {
 			e.printStackTrace();
 			// System.out.println(e.getMessage());
 		}
-		// for (int i = 0; i < fields.size(); i++) {
-		// System.out.println(fields.size());
-		System.out.println("field name: " + current_field.name);
-		System.out.println("field prompt: " + current_field.prompt);
-		for (int i = 0; i < current_field.choices.size(); i++) {
-			System.out.println("field choice: " + i + " name: "
-					+ current_field.choices.get(i).name + " tag: "
-					+ current_field.choices.get(i).tag);
+		for (int j = 0; j < fields.size(); j++) {
+			// System.out.println(fields.size());
+			current_field = fields.get(j);
+			System.out.println("field name: " + current_field.name);
+			System.out.println("field prompt: " + current_field.prompt);
+			for (int i = 0; i < current_field.choices.size(); i++) {
+				System.out.println("field choice: " + i + " name: "
+						+ current_field.choices.get(i).name + " tag: "
+						+ current_field.choices.get(i).tag);
+			}
+			System.out.println("field cond: " + current_field.cond);
+			System.out.println("field onFilledCond cond: "
+					+ current_field.onFilledCond.cond);
+			for (int i = 0; i < current_field.onFilledCond.clearList.size(); i++) {
+				System.out.println("field onfilledcond clearList: " + i + " "
+						+ current_field.onFilledCond.clearList.get(i));
+			}
+			System.out.println("field onFIlledIsCond: "
+					+ current_field.onFilledIsCond);
+			System.out.println("field filledText: "
+					+ current_field.onFilledText);
+			System.out.println();
 		}
-		System.out.println("field cond: " + current_field.cond);
-		System.out.println("field onFilledCond cond: "
-				+ current_field.onFilledCond.cond);
-		for (int i = 0; i < current_field.onFilledCond.clearList.size(); i++) {
-			System.out.println("field onfilledcond clearList: " + i + " "
-					+ current_field.onFilledCond.clearList.get(i));
-		}
-		System.out.println("field onFIlledIsCond: "
-				+ current_field.onFilledIsCond);
-		System.out.println("field filledText: " + current_field.onFilledText);
-		// }
 		return fields;
 	}
 
@@ -88,11 +91,14 @@ public class Parser extends DefaultHandler {
 			Attributes atts) {
 		// System.out.println("Start element:   {" + uri + "}" + name + " >>> "
 		// + qName);
-		if ("field" == name) {
+		if ("field" == name || "block" == name) {
+			if ("block" == name) {
+				prompt = true;
+			}
 			field = true;
 			current_field = new Field();
-			current_field.name = atts.getValue(0);
-			current_field.cond = atts.getValue(1);
+			current_field.name = atts.getValue("name");
+			current_field.cond = atts.getValue("cond");
 		} else if ("prompt" == name) {
 			prompt = true;
 		} else if ("value" == name) {
@@ -133,7 +139,10 @@ public class Parser extends DefaultHandler {
 			item = false;
 		} else if ("prompt" == name) {
 			prompt = false;
-		} else if ("field" == name) {
+		} else if ("field" == name || "block" == name) {
+			if ("block" == name) {
+				prompt = false;
+			}
 			fields.add(current_field);
 		} else {
 		}

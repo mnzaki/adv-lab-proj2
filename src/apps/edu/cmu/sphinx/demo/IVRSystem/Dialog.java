@@ -110,15 +110,16 @@ public class Dialog {
 		// continue on the form at a field that has its variable set
 		// so that if a field clears variables, then processing goes back
 		// to the respective fields
-		int firstUnfilledField = 0;
+		int lastFilledField = 0;
 		try {
-			for (; firstUnfilledField < fields.size(); firstUnfilledField++) {
-				Field f = fields.get(firstUnfilledField);
+			for (; lastFilledField < fields.size(); lastFilledField++) {
+				Field f = fields.get(lastFilledField);
 				if (f.name != null && !f.name.equals("") && isJSUndefined(f.name)) {
+					lastFilledField--;
 					break;
 				}
 			}
-			curFieldIndex = firstUnfilledField;
+			curFieldIndex = lastFilledField + 1;
 		} catch (JavaScriptException e) {
 			e.printStackTrace();
 		}

@@ -33,12 +33,19 @@ public class Parser extends DefaultHandler {
 	boolean prompt = false;;
 	boolean tag = false;
 	boolean isFilled = false;
+	boolean script = false;
+
+	private String scriptSrc = "";
 
 	private static String[] pc_text;
 	private static String[] user_text;
 
 	public Parser(String path) {
 		this.path = path;
+	}
+
+	public String extractScript() {
+		return scriptSrc;
 	}
 
 	public ArrayList<Field> parse() {
@@ -116,7 +123,8 @@ public class Parser extends DefaultHandler {
 		} else if ("clear" == name) {
 			current_ifCond.clearList = new ArrayList<String>(Arrays.asList(atts
 					.getValue(0).split(" ")));
-		} else {
+		} else if ("script" == name) {
+			script = true;
 		}
 	}
 
@@ -144,14 +152,17 @@ public class Parser extends DefaultHandler {
 				prompt = false;
 			}
 			fields.add(current_field);
-		} else {
+		} else if ("script" == name) {
+			script = false;
 		}
 	}
 
 	public void characters(char ch[], int start, int length) {
 		// System.out.print("Characters:    \"");
 		for (int i = start; i < start + length; i++) {
-			if (tag) {
+			if (script) {
+				scriptSrc += ch[i];
+			} else if (tag) {
 				current_choice.tag += ch[i];
 			} else if (item) {
 				current_choice.name += ch[i];

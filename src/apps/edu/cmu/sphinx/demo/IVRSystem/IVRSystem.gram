@@ -1,0 +1,13 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for project 1 (calculator)
+ */
+ 
+grammar IVRSystem;
+
+<size> = (BIG | REGULAR);
+<confirmation> = (YES | NO);
+<toppings> = (CHEESE | MUSHROOMS);
+<crust> = (STUFFED | REGULAR);
+public <command> = (<size> | <confirmation> | <toppings> | <crust>); 

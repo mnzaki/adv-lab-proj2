@@ -92,6 +92,7 @@ public class Parser extends DefaultHandler {
 			field = true;
 			current_field = new Field();
 			current_field.name = atts.getValue(0);
+			current_field.cond = atts.getValue(1);
 		} else if ("prompt" == name) {
 			prompt = true;
 		} else if ("value" == name) {
@@ -118,23 +119,22 @@ public class Parser extends DefaultHandler {
 		// + qName);
 		if ("filled" == name && contains_if) {
 			current_field.onFilledCond = current_ifCond;
+			current_ifCond = new IfCond();
 			contains_if = false;
+			current_field.onFilledIsCond = true;
 			isFilled = false;
-		}
-		if ("filled" == name && !contains_if) {
+		} else if ("filled" == name && !contains_if) {
 			isFilled = false;
 		} else if ("tag" == name) {
 			tag = false;
 		} else if ("item" == name) {
 			current_field.choices.add(current_choice);
+			current_choice = new Choice();
 			item = false;
 		} else if ("prompt" == name) {
 			prompt = false;
 		} else if ("field" == name) {
 			fields.add(current_field);
-		} else if ("filled" == name && contains_if) {
-			current_field.onFilledCond = current_ifCond;
-			contains_if = false;
 		} else {
 		}
 	}

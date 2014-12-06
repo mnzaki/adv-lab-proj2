@@ -7,14 +7,27 @@ public class Field {
 	String prompt;
 	ArrayList<Choice> choices;
 	String cond;
-	IfCond onFilled;
+	IfCond onFilledCond;
+	boolean onFilledIsCond;
+	String onFilledText;
 
 	public Field(String name, String prompt, ArrayList<Choice> choices,
-			String cond, IfCond onFilled) {
+			String cond, IfCond onFilledCond) {
 		this.name = name;
 		this.prompt = prompt;
 		this.choices = choices;
 		this.cond = cond;
-		this.onFilled = onFilled;
+		this.onFilledCond = onFilledCond;
+		onFilledIsCond = true;
+	}
+
+	public Field(String name, String prompt, ArrayList<Choice> choices,
+			String cond, String onFilledText) {
+		this.name = name;
+		this.prompt = prompt;
+		this.choices = choices;
+		this.cond = cond;
+		this.onFilledText = onFilledText;
+		onFilledIsCond = false;
 	}
 }

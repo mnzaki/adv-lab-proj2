@@ -41,7 +41,7 @@ public class Dialog {
 					if (i % 2 == 0) {
 						inp += retArr[i];
 					} else {
-						inp += (String) evalJS(retArr[i], "retArr[" + i + "]");
+						inp += evalJS(retArr[i], "retArr[" + i + "]");
 					}
 				}
 			}

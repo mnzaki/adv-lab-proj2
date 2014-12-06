@@ -114,12 +114,13 @@ public class Dialog {
 		try {
 			for (; lastFilledField < fields.size(); lastFilledField++) {
 				Field f = fields.get(lastFilledField);
-				if (f.name != null && !f.name.equals("") && isJSUndefined(f.name)) {
+                                if (f.name != null && !f.name.equals("") && isJSUndefined(f.name)) {
 					lastFilledField--;
 					break;
 				}
 			}
 			curFieldIndex = lastFilledField + 1;
+                        if(curFieldIndex>fields.size()) curFieldIndex = fields.size()-1;
 		} catch (JavaScriptException e) {
 			e.printStackTrace();
 		}

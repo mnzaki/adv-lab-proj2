@@ -64,7 +64,7 @@ public class Dialog {
 		int i; Choice c = null;
 		for (i = 0; i < field.choices.size(); i++) {
 			c = field.choices.get(i);
-			if (userInput.equals(c.name)) break;
+			if (userInput.equals(c.name.toLowerCase())) break;
 		}
 		
 		// if the userInput is NOT a valid choice, bail out

@@ -31,13 +31,18 @@ public class Parser2 extends DefaultHandler {
 		this.path = path;
 		root = new Node("root");
 		idHash = new Hashtable<String, Node>();
+		parse();
 	}
 
 	public Node getNodeById(String id) {
 		return idHash.get(id);
 	}
 	
-	public Node parse() {		
+	public Node getRootNode() {
+		return root;
+	}
+	
+	private void parse() {		
 		nodes = new ArrayList<Node>();
 		nodes.add(root);
 		
@@ -75,7 +80,6 @@ public class Parser2 extends DefaultHandler {
 //					+ current_field.onFilledText);
 //			System.out.println();
 //		}
-		return root;
 	}
 
 	public void startDocument() {

@@ -3,12 +3,14 @@ package edu.cmu.sphinx.demo.IVRSystem;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,14 +24,20 @@ import org.xml.sax.helpers.DefaultHandler;
 public class Parser2 extends DefaultHandler {
 	private ArrayList<Node> nodes;
 	private Node root;
+	private Hashtable<String, Node> idHash;
 	String path;
 
 	public Parser2(String path) {
 		this.path = path;
+		root = new Node("root");
+		idHash = new Hashtable<String, Node>();
 	}
 
-	public Node parse() {
-		root = new Node("root");
+	public Node getNodeById(String id) {
+		return idHash.get(id);
+	}
+	
+	public Node parse() {		
 		nodes = new ArrayList<Node>();
 		nodes.add(root);
 		
@@ -83,6 +91,11 @@ public class Parser2 extends DefaultHandler {
 		Node n = new Node(name, atts);
 		nodes.add(n);
 		
+		String id = atts.getValue("id");
+		if (id != null && !id.equals("")) {
+			idHash.put(id, n);
+		}
+
 		System.out.println("Start element:   {" + uri + "}" + name + " >>> "
 		+ qName);
 	}

@@ -74,7 +74,6 @@ public class Interface {
                 toBeSpoken = "";
                 if(res != null) {
                     toBeSpoken = res.getBestFinalResultNoFiller();
-                    System.out.println("7amada: " + toBeSpoken);
                 }
             }
             toBeSpoken = dialog.interact(toBeSpoken);

@@ -1,6 +1,7 @@
 package edu.cmu.sphinx.demo.IVRSystem;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.xml.sax.Attributes;
 
@@ -8,12 +9,17 @@ public class Node {
 	public ArrayList<Node> children;
 	public String text;
 	public String type;
-	public Attributes atts;
+	public Hashtable<String, String> atts;
 	
 	public Node(String type, Attributes atts) {
 		this.type = type;
 		this.text = "";
-		this.atts = atts;
+		this.atts = new Hashtable<String, String>();
+
+		for (int i = 0; i < atts.getLength(); i++) {
+			this.atts.put(atts.getQName(i), atts.getValue(i));
+		}
+
 		children = new ArrayList<Node>();
 	}
 	
@@ -39,6 +45,10 @@ public class Node {
 		return str;
 	}
 	
+	public String getAttr(String name) {
+		return atts.get(name);
+	}
+
 	@Override
 	public String toString() {
 		return toString(0);	

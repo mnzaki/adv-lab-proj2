@@ -83,16 +83,17 @@ public class Parser2 extends DefaultHandler {
 	}
 
 	public void startDocument() {
-		System.out.println("Start document");
+//		System.out.println("Start document");
 	}
 
 	public void endDocument() {
-		System.out.println("End document");
+//		System.out.println("End document");
 	}
 
 	public void startElement(String uri, String name, String qName,
 			Attributes atts) {
 		Node n = new Node(name, atts);
+
 		nodes.add(n);
 		
 		String id = atts.getValue("id");
@@ -100,20 +101,18 @@ public class Parser2 extends DefaultHandler {
 			idHash.put(id, n);
 		}
 
-		System.out.println("Start element:   {" + uri + "}" + name + " >>> "
-		+ qName);
+//		System.out.println("Start element:   {" + uri + "}" + name + " >>> " + qName);
 	}
 	
 	public void characters(char ch[], int start, int length) {
 		String s = new String(ch, start, length);
-		System.out.print("Characters: " + s);
+//		System.out.print("Characters: " + s);
 		Node n = nodes.get(nodes.size()-1);
 		n.text += s;
 	}
 	
 	public void endElement(String uri, String name, String qName) {
-		System.out.println("End element:   {" + uri + "}" + name + " >>> "
-		+ qName);
+//		System.out.println("End element:   {" + uri + "}" + name + " >>> " + qName);
 		// FIXME special case <value /> tags
 		Node n = nodes.remove(nodes.size()-1);
 		Node p = nodes.get(nodes.size()-1);

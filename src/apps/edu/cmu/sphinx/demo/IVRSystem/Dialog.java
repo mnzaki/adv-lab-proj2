@@ -178,7 +178,7 @@ public class Dialog {
 			e.printStackTrace();
 		}
 	}
-
+/*
 	public static void main(String[] args) {
 		ArrayList<Field> fields = new ArrayList<Field>();
 		ArrayList<Choice> choices;
@@ -203,4 +203,5 @@ public class Dialog {
 		System.out.println(d.interact("big"));
 		System.out.println(d.interact("no"));
 	}
+*/
 }

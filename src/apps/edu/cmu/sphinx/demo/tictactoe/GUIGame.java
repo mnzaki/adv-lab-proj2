@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 
 import edu.cmu.sphinx.frontend.util.Microphone;
+import edu.cmu.sphinx.jsgf.JSGFGrammar;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
@@ -32,35 +33,9 @@ public class GUIGame extends JFrame {
 	JButton text_button;
 
 	/**
-	 * Launch the application.
-	 */
-	// public static void main(String[] args) {
-	// EventQueue.invokeLater(new Runnable() {
-	// public void run() {
-	// try {
-	// GUIGame frame = new GUIGame(0);
-	// frame.setVisible(true);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// });
-	// }
-
-	/**
 	 * Create the frame.
 	 */
 	public GUIGame(int size) {
-		String[] grammar_table = new String[10];
-		grammar_table[0] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE);\n public <command> = <numbers>;";
-		grammar_table[3] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE);\n public <command> = <numbers> <numbers>;";
-		grammar_table[4] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR);\n public <command> = <numbers> <numbers>;";
-		grammar_table[5] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE);\n public <command> = <numbers> <numbers>;";
-		grammar_table[6] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE | SIX);\n public <command> = <numbers> <numbers>;";
-		grammar_table[7] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN);\n public <command> = <numbers> <numbers>;";
-		grammar_table[8] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT);\n public <command> = <numbers> <numbers>;";
-		grammar_table[9] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE);\n public <command> = <numbers> <numbers>;";
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -68,17 +43,6 @@ public class GUIGame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		game = new TicTacToeGame(size);
-		try {
-			File myFoo = new File(
-					"src/apps/edu/cmu/sphinx/demo/tictactoe/tictactoe.gram");
-			FileOutputStream fooStream = new FileOutputStream(myFoo, false);
-			byte[] myBytes = grammar_table[size].getBytes();
-			fooStream.write(myBytes);
-			fooStream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 		table = new JTable();
 		table.setBounds(12, 78, 426, 182);
 		table.setModel(new DefaultTableModel(size, size));
@@ -100,14 +64,27 @@ public class GUIGame extends JFrame {
 				ConfigurationManager cm = new ConfigurationManager(
 						TicTacToe.class.getResource("tictactoe.config.xml"));
 				Recognizer recognizer = (Recognizer) cm.lookup("recognizer");
+				recognizer.allocate();
 				Microphone microphone = (Microphone) cm.lookup("microphone");
 				if (!microphone.startRecording()) {
 					System.out.println("Cannot start microphone.");
 					recognizer.deallocate();
 					System.exit(1);
 				}
+				JSGFGrammar grammar = (JSGFGrammar) cm.lookup("jsgfGrammar");
+				try {
+					grammar.loadJSGF("tictactoe");
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					System.out.println("couldnt load");
+				}
+				// for (int i = 0; i < 10; i++) {
+				// System.out.println(grammar.getRandomSentence());
+				// }
 				Result result = recognizer.recognize();
 				String resultText = result.getBestFinalResultNoFiller();
+				recognizer.deallocate();
+				System.out.println(resultText);
 				String[] numbers = resultText.split(" ");
 				set(numbers);
 			}
@@ -130,8 +107,8 @@ public class GUIGame extends JFrame {
 		int i = 0;
 		int j = 0;
 		try {
-			i = Numbers.valueOf(numbers[0]).getValue() - 1;
-			j = Numbers.valueOf(numbers[1]).getValue() - 1;
+			i = Numbers.valueOf(numbers[0].toUpperCase()).getValue() - 1;
+			j = Numbers.valueOf(numbers[1].toUpperCase()).getValue() - 1;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,
 					"Please enter coordinates in the format Number Number");

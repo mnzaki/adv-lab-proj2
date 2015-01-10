@@ -1,4 +1,3 @@
 #JSGF V1.0;
  grammar TicTacToe;
- <numbers> = (ONE | TWO | THREE | FOUR);
- public <command> = <numbers> <numbers>;
+ public <command> = (THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE);

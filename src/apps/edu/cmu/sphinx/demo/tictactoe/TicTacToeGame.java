@@ -78,4 +78,13 @@ public class TicTacToeGame {
 			return true;
 		return false;
 	}
+
+	public String[][] getBoard() {
+		return board;
+	}
+
+	public void setBoard(String[][] board) {
+		this.board = board;
+	}
+
 }

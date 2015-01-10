@@ -35,12 +35,8 @@ public class TicTacToe {
 
 		Scanner sc = new Scanner(System.in);
 		ConfigurationManager cm;
-		if (args.length > 0) {
-			cm = new ConfigurationManager(args[0]);
-		} else {
-			cm = new ConfigurationManager(
-					TicTacToe.class.getResource("tictactoe.config.xml"));
-		}
+		cm = new ConfigurationManager(
+				TicTacToe.class.getResource("tictactoe.config.xml"));
 
 		System.out
 				.println("enter 0 to use keyboard to enter data or enter 1 to use microphone for entering board size");

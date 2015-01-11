@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.swing.JLabel;
 
 public class GUI extends JFrame {
 
@@ -73,7 +74,7 @@ public class GUI extends JFrame {
 				showGame(size);
 			}
 		});
-		btnEnterText.setBounds(276, 12, 151, 25);
+		btnEnterText.setBounds(276, 30, 151, 25);
 		contentPane.add(btnEnterText);
 
 		JButton btnEnterSpeech = new JButton("Enter Speech");
@@ -102,7 +103,7 @@ public class GUI extends JFrame {
 				Result result = recognizer.recognize();
 				String resultText = result.getBestFinalResultNoFiller();
 				recognizer.deallocate();
-				System.out.println(resultText);
+//				System.out.println(resultText);
 				try {
 					int size = Numbers.valueOf(resultText.toUpperCase())
 							.getValue();
@@ -114,13 +115,17 @@ public class GUI extends JFrame {
 
 			}
 		});
-		btnEnterSpeech.setBounds(276, 49, 151, 25);
+		btnEnterSpeech.setBounds(276, 67, 151, 25);
 		contentPane.add(btnEnterSpeech);
 
 		size_text_field = new JTextField();
-		size_text_field.setBounds(40, 12, 114, 19);
+		size_text_field.setBounds(41, 35, 114, 19);
 		contentPane.add(size_text_field);
 		size_text_field.setColumns(10);
+		
+		JLabel lblPleaseEnterThe = new JLabel("Please Enter the size of the board");
+		lblPleaseEnterThe.setBounds(100, 0, 261, 15);
+		contentPane.add(lblPleaseEnterThe);
 	}
 
 	public void showGame(int size) {
@@ -129,7 +134,7 @@ public class GUI extends JFrame {
 					"Please enter a number >= 3 and <= 9");
 			return;
 		}
-		System.out.println(size);
+//		System.out.println(size);
 		writeGrammar(size);
 		frame.setVisible(false);
 		new GUIGame(size).setVisible(true);

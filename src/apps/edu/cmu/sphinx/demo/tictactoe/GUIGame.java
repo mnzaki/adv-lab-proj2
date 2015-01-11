@@ -107,11 +107,12 @@ public class GUIGame extends JFrame {
 		int i = 0;
 		int j = 0;
 		try {
+			System.out.println(numbers[0] + " -- " + numbers[1]);
 			i = Numbers.valueOf(numbers[0].toUpperCase()).getValue() - 1;
 			j = Numbers.valueOf(numbers[1].toUpperCase()).getValue() - 1;
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,
-					"Please enter coordinates in the format Number Number");
+			// this is because getBestFinalResultNoFiller may return empty
+			// string in some weird conditions
 			return;
 		}
 		game.setCell(i, j);

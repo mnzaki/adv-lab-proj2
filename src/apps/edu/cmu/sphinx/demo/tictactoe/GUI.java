@@ -97,13 +97,10 @@ public class GUI extends JFrame {
 					e1.printStackTrace();
 					System.out.println("couldnt load");
 				}
-//				for (int i = 0; i < 10; i++) {
-//					System.out.println(grammar.getRandomSentence());
-//				}
 				Result result = recognizer.recognize();
 				String resultText = result.getBestFinalResultNoFiller();
 				recognizer.deallocate();
-//				System.out.println(resultText);
+				System.out.println(resultText);
 				try {
 					int size = Numbers.valueOf(resultText.toUpperCase())
 							.getValue();
@@ -122,8 +119,9 @@ public class GUI extends JFrame {
 		size_text_field.setBounds(41, 35, 114, 19);
 		contentPane.add(size_text_field);
 		size_text_field.setColumns(10);
-		
-		JLabel lblPleaseEnterThe = new JLabel("Please Enter the size of the board");
+
+		JLabel lblPleaseEnterThe = new JLabel(
+				"Please Enter the size of the board");
 		lblPleaseEnterThe.setBounds(100, 0, 261, 15);
 		contentPane.add(lblPleaseEnterThe);
 	}
@@ -134,7 +132,7 @@ public class GUI extends JFrame {
 					"Please enter a number >= 3 and <= 9");
 			return;
 		}
-//		System.out.println(size);
+		System.out.println(size);
 		writeGrammar(size);
 		frame.setVisible(false);
 		new GUIGame(size).setVisible(true);
@@ -142,24 +140,36 @@ public class GUI extends JFrame {
 	}
 
 	public void writeGrammar(int index) {
-		String[] grammar_table = new String[10];
-		grammar_table[0] = "#JSGF V1.0;\n grammar TicTacToe;\n public <command> = (THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE);";
-		grammar_table[3] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE);\n public <command> = (<numbers> <numbers>);";
-		grammar_table[4] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR);\n public <command> = (<numbers> <numbers>);";
-		grammar_table[5] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE);\n public <command> = (<numbers> <numbers>);";
-		grammar_table[6] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE | SIX);\n public <command> = (<numbers> <numbers>);";
-		grammar_table[7] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN);\n public <command> = (<numbers> <numbers>);";
-		grammar_table[8] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT);\n public <command> = (<numbers> <numbers>);";
-		grammar_table[9] = "#JSGF V1.0;\n grammar TicTacToe;\n <numbers> = (ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE);\n public <command> = (<numbers> <numbers>);";
 		try {
 			File myFoo = new File(
 					"bld/edu/cmu/sphinx/demo/tictactoe/tictactoe.gram");
 			FileOutputStream fooStream = new FileOutputStream(myFoo, false);
-			byte[] myBytes = grammar_table[index].getBytes();
+			String grammar = generateGrammar(index);
+			byte[] myBytes = grammar.getBytes();
 			fooStream.write(myBytes);
 			fooStream.close();
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		}
+	}
+
+	public String generateGrammar(int maxValue) {
+		String grammar = "#JSGF V1.0;\ngrammar TicTacToe;\n";
+		int start = 1;
+		int end = maxValue;
+		String command = "public <command> = (<numbers> <numbers>);";
+		if (maxValue == 0) {
+			start = 3;
+			end = 9;
+			command = "public <command> = <numbers>;";
+		}
+		String rule = "<numbers> = (";
+		for (int i = start; i <= end; i++) {
+			rule = rule + Numbers.values()[i - 1] + " |";
+		}
+		rule = rule.substring(0, rule.length() - 2) + ");\n";
+		grammar += rule;
+		grammar += command;
+		return grammar;
 	}
 }
